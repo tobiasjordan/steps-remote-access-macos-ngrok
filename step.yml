@@ -85,6 +85,15 @@ inputs:
       summary: The specified password will be set as the current User's password and as the VNC password.
       description: |
         The specified password **will be set as the current User's password** and as the VNC password.
+        Please note: When running macOS 10.14 or later, the user's current password must be specified in `$CURRENT_USER_PASSWORD` or otherwise changing of the user password will fail.
+      is_expand: true
+      is_required: false
+  - current_user_password: $CURRENT_USER_PASSWORD
+    opts:
+      title: "Current User password"
+      summary: The user's current password.
+      description: |
+        The user's current macOS account password (only needed on macOS 10.14 or later).
       is_expand: true
       is_required: false
   - is_step_debug_mode: "false"

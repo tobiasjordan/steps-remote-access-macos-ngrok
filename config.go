@@ -12,6 +12,7 @@ import (
 type ConfigsModel struct {
 	SSHPublicKey    string
 	PasswordToSet   string
+	CurrentPassword string
 	NgrokAuthToken  string
 	IsStepDebugMode bool
 }
@@ -21,6 +22,7 @@ func createConfigsModelFromEnvs() ConfigsModel {
 		NgrokAuthToken:  os.Getenv("ngrok_auth_token"),
 		SSHPublicKey:    os.Getenv("ssh_public_key"),
 		PasswordToSet:   os.Getenv("user_and_screen_share_password"),
+		CurrentPassword: os.Getenv("current_user_password"),
 		IsStepDebugMode: os.Getenv("is_step_debug_mode") == "true",
 	}
 }
@@ -32,8 +34,10 @@ func (configs ConfigsModel) print() {
 	log.Printf("- SSHPublicKey: %s", configs.SSHPublicKey)
 	if configs.IsStepDebugMode {
 		log.Printf("- PasswordToSet: %s", configs.PasswordToSet)
+		log.Printf("- CurrentPassword: %s", configs.CurrentPassword)
 	} else {
 		log.Printf("- PasswordToSet: ***")
+		log.Printf("- CurrentPassword: ***")
 	}
 	if configs.IsStepDebugMode {
 		log.Printf("- NgrokAuthToken: %s", configs.NgrokAuthToken)

@@ -71,7 +71,7 @@ func EnableRemoteDesktop(password string) error {
 }
 
 // ChangeUserPassword ...
-func ChangeUserPassword(changePasswordTo string) error {
+func ChangeUserPassword(changePasswordTo string, currentPassword string) error {
 	user, err := user.Current()
 	if err != nil {
 		return errors.WithStack(err)
@@ -79,7 +79,12 @@ func ChangeUserPassword(changePasswordTo string) error {
 
 	log.Printf(" (!) Changing password of user: %s", user.Username)
 
-	cmd := command.New("sudo", "dscl", ".", "-passwd", "/Users/"+user.Username, changePasswordTo)
+	var cmd *command.Model
+	if currentPassword != "" {
+		cmd = command.New("sudo", "dscl", ".", "-passwd", "/Users/"+user.Username, currentPassword, changePasswordTo)
+	} else {
+		cmd = command.New("sudo", "dscl", ".", "-passwd", "/Users/"+user.Username, changePasswordTo)
+	}
 	if isDebugMode {
 		log.Infof("\n$ %s\n", cmd.PrintableCommandArgs())
 	}
@@ -222,7 +227,7 @@ func doMain() error {
 	log.Printf("VNC / remote desktop / screen sharing setup ...")
 	if configs.PasswordToSet != "" {
 		log.Printf("Change user password...")
-		if err := ChangeUserPassword(configs.PasswordToSet); err != nil {
+		if err := ChangeUserPassword(configs.PasswordToSet, configs.CurrentPassword); err != nil {
 			return errors.Wrap(err, "Can't change user password")
 		}
 
